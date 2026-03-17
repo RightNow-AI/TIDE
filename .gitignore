@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+*.so
+*.dylib
+*.dll
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# CUDA build artifacts
+*.o
+*.obj
+*.cubin
+*.fatbin
+*.ptx
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Benchmark outputs
+benchmarks/results/
+*.json.bak
+
+# Model weights / caches
+*.bin
+*.safetensors
+model_cache/
+router_weights/
+
+# Internal dev files
+EXITFORGE_CLAUDE_CODE_PROMPT.md
+.claude/

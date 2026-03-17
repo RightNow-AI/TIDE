@@ -1,0 +1,45 @@
+name: Benchmark
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: "Benchmark phase (1-3)"
+        required: true
+        default: "1"
+      model:
+        description: "Specific model (optional, overrides phase)"
+        required: false
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Modal
+        run: pip install modal pyyaml
+
+      - name: Run benchmarks on Modal
+        env:
+          MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
+          MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
+        run: |
+          if [ -n "${{ github.event.inputs.model }}" ]; then
+            modal run benchmarks/modal/run_all.py -- --model "${{ github.event.inputs.model }}"
+          else
+            modal run benchmarks/modal/run_all.py -- --phase ${{ github.event.inputs.phase || '1' }}
+          fi
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: results/

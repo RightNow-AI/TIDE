@@ -1,0 +1,10 @@
+include LICENSE
+include README.md
+include CONTRIBUTING.md
+include setup.py
+
+# CUDA kernel sources (compiled at install time)
+recursive-include csrc *.cpp *.cu *.cuh *.h
+
+# Examples
+recursive-include examples *.py
