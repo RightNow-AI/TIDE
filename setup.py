@@ -70,33 +70,46 @@ ext_modules = []
 cmdclass = {}
 
 if check_nvcc() and os.environ.get("TIDE_NO_CUDA", "0") != "1":
-    from torch.utils.cpp_extension import CUDAExtension, BuildExtension
+    try:
+        from torch.utils.cpp_extension import CUDAExtension, BuildExtension
 
-    cuda_arch_flags = detect_cuda_arch_flags()
+        cuda_arch_flags = detect_cuda_arch_flags()
 
-    ext_modules = [
-        CUDAExtension(
-            name="TIDE._C",
-            sources=[
-                "csrc/extensions/torch_bindings.cpp",
-                "csrc/kernels/fused_layernorm_route.cu",
-                "csrc/kernels/batch_compact.cu",
-                "csrc/kernels/exit_scatter.cu",
-                "csrc/kernels/exit_projection.cu",
-            ],
-            extra_compile_args={
-                "cxx": ["-O3"],
-                "nvcc": [
-                    "-O3",
-                    "--use_fast_math",
-                    *cuda_arch_flags,
-                    "-lineinfo",
-                    "--threads=4",
+        ext_modules = [
+            CUDAExtension(
+                name="TIDE._C",
+                sources=[
+                    "csrc/extensions/torch_bindings.cpp",
+                    "csrc/kernels/fused_layernorm_route.cu",
+                    "csrc/kernels/batch_compact.cu",
+                    "csrc/kernels/exit_scatter.cu",
+                    "csrc/kernels/exit_projection.cu",
                 ],
-            },
-        ),
-    ]
-    cmdclass = {"build_ext": BuildExtension}
+                extra_compile_args={
+                    "cxx": ["-O3"],
+                    "nvcc": [
+                        "-O3",
+                        "--use_fast_math",
+                        *cuda_arch_flags,
+                        "-lineinfo",
+                        "--threads=4",
+                    ],
+                },
+            ),
+        ]
+        class OptionalBuildExt(BuildExtension):
+            """BuildExtension that falls back gracefully if compilation fails."""
+            def build_extensions(self):
+                try:
+                    super().build_extensions()
+                except Exception as e:
+                    print(f"\nWARNING: CUDA extension build failed: {e}")
+                    print("Installing without CUDA kernels (pure Python fallback).\n")
+                    self.extensions = []
+
+        cmdclass = {"build_ext": OptionalBuildExt}
+    except Exception:
+        pass
 
 setup(
     ext_modules=ext_modules,
