@@ -1,0 +1,50 @@
+# Benchmark configuration
+
+throughput:
+  batch_sizes: [1, 4, 8, 16, 32, 64, 128]
+  seq_len: 512
+  baselines: ["huggingface", "vllm"]
+  warmup_iters: 3
+  bench_iters: 10
+
+latency:
+  batch_sizes: [1, 8, 32]
+  seq_len: 512
+  max_new_tokens: 128
+  metrics: ["ttft", "itl"]
+
+quality:
+  thresholds: [0.7, 0.8, 0.85, 0.9, 0.95]
+  datasets:
+    - name: "mmlu"
+      split: "test"
+      n_samples: 1000
+    - name: "humaneval"
+      n_samples: 164
+    - name: "gsm8k"
+      split: "test"
+      n_samples: 500
+    - name: "math"
+      split: "test"
+      n_samples: 500
+    - name: "arc_challenge"
+      split: "test"
+      n_samples: 500
+
+reasoning:
+  thresholds: [0.8, 0.85, 0.9]
+  datasets:
+    - name: "math500"
+      n_samples: 500
+    - name: "gpqa"
+      n_samples: 448
+  prompt_style: "cot"
+
+memory:
+  batch_sizes: [1, 8, 32]
+  seq_len: 512
+
+exit_distribution:
+  batch_sizes: [1, 8, 32]
+  seq_len: 512
+  n_samples: 100

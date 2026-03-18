@@ -1,0 +1,58 @@
+# Model registry for TIDE benchmarks
+
+phase_1:
+  # Small/medium models for validation
+  - name: "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+    short: "llama4-scout-17b"
+    gpu: "A100"
+    dtype: "bfloat16"
+  - name: "meta-llama/Llama-3.3-70B-Instruct"
+    short: "llama3.3-70b"
+    gpu: "H100:2"
+    dtype: "bfloat16"
+  - name: "Qwen/Qwen3-8B"
+    short: "qwen3-8b"
+    gpu: "A100"
+    dtype: "bfloat16"
+  - name: "mistralai/Mistral-Small-3.1-24B-Instruct-2503"
+    short: "mistral-small-3.1"
+    gpu: "A100"
+    dtype: "bfloat16"
+  - name: "google/gemma-3-12b-it"
+    short: "gemma3-12b"
+    gpu: "A100"
+    dtype: "bfloat16"
+
+phase_2:
+  # Large models
+  - name: "meta-llama/Llama-4-Maverick-17B-128E-Instruct"
+    short: "llama4-maverick-17b"
+    gpu: "H100:2"
+    dtype: "bfloat16"
+  - name: "Qwen/Qwen3-32B"
+    short: "qwen3-32b"
+    gpu: "H100"
+    dtype: "bfloat16"
+  - name: "google/gemma-3-27b-it"
+    short: "gemma3-27b"
+    gpu: "H100"
+    dtype: "bfloat16"
+
+phase_3:
+  # Reasoning models (key TIDE targets — long decode, many easy tokens)
+  - name: "deepseek-ai/DeepSeek-R1-Distill-Llama-8B"
+    short: "r1-distill-8b"
+    gpu: "A100"
+    dtype: "bfloat16"
+  - name: "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B"
+    short: "r1-distill-32b"
+    gpu: "H100"
+    dtype: "bfloat16"
+  - name: "Qwen/QwQ-32B"
+    short: "qwq-32b"
+    gpu: "H100"
+    dtype: "bfloat16"
+  - name: "deepseek-ai/DeepSeek-R1-Distill-Llama-70B"
+    short: "r1-distill-70b"
+    gpu: "H100:2"
+    dtype: "bfloat16"
